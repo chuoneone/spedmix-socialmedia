@@ -48,6 +48,7 @@ Create helpful, visually calm carousel posts that turn one classroom problem int
 - For inner slides, use the vertical reading order: title, screenshot, then explanatory body copy. Do not put a subtitle directly under the title.
 - On the cover slide only, render the main headline and subtitle in black; keep the coffee-brown palette for the remaining slide text unless a supplied template specifies otherwise.
 - Cover copy convention: make the main headline a concrete teacher pain point; use the subtitle to name the tool, resource, or post theme.
+- Inner body copy typography: use the Iansui (芫荽體) family at a consistent 35px size for explanatory text, tips, leads, and output cards. Titles use their separate headline size.
 - Check contrast, mobile legibility, safe margins, and that the title fits on one intended line group without awkward wrapping.
 - Stage 1 must deliver the editable Markdown draft only; Stage 2 must deliver the approved Markdown, editable HTML source, and any exported slide images/PDF.
 - Verify that examples involving disability, attention, behavior, or mistakes are respectful and strengths-based.
