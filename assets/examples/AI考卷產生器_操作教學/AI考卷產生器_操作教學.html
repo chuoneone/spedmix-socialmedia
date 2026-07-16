@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 考卷產生器操作教學</title>
+  <style>
+    :root { --cream:#fbf4e7; --paper:#fffdfa; --coffee:#5b3024; --muted:#725348; --line:#d9b77f; --green:#4f8e72; --text-scale:1; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#d9d2c8; font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif; }
+    .slide { --text-scale:1; position:relative; width:1080px; height:1350px; overflow:hidden; background:var(--cream); color:var(--coffee); }
+    .slide::after { content:""; position:absolute; left:-100px; right:-100px; bottom:-560px; height:720px; border:2px solid rgba(91,48,36,.34); border-radius:50%; pointer-events:none; }
+    .number { position:absolute; top:42px; left:56px; padding:12px 22px; border-radius:999px; background:#f1dfbf; color:#7b4f30; font-size:25px; font-weight:700; letter-spacing:1px; }
+    .paper { position:absolute; inset:130px 70px 105px; padding:70px 78px; background:var(--paper); border-radius:30px; box-shadow:0 16px 0 rgba(91,48,36,.10); text-align:center; }
+    .tape { position:absolute; top:-30px; left:50%; width:330px; height:68px; transform:translateX(-50%) rotate(-1deg); background:#e8d0a1; opacity:.9; }
+    .eyebrow { margin:0 0 22px; color:#876147; font-size:26px; font-weight:700; letter-spacing:2px; }
+    h1, h2 { font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif; }
+    h1 { margin:0; font-size:calc(72px * var(--font-scale, 1)); line-height:1.26; font-weight:800; letter-spacing:1px; }
+    h2 { margin:0 0 24px; font-size:calc(76px * var(--font-scale, 1)); line-height:1.2; font-weight:800; }
+    p, .tip, .step { font-family:"Iansui","芫荽體","芫荽","Noto Sans TC","Microsoft JhengHei",sans-serif; }
+    p { margin:0; font-size:calc(35px * var(--font-scale, 1)); line-height:1.55; color:var(--muted); }
+    .lead { margin-top:38px; font-size:calc(35px * var(--font-scale, 1)); color:var(--coffee); }
+    .divider { width:72%; margin:38px auto; border-top:4px dashed var(--line); }
+    .emoji { margin:0 0 26px; font-size:74px; line-height:1; }
+    .title-row { display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:24px; }
+    .title-row .emoji { margin:0; flex:0 0 auto; }
+    .title-row h1, .title-row h2 { margin:0; }
+    .title-row h2 { font-size:calc(76px * var(--font-scale, 1)); line-height:1.2; font-weight:800; white-space:nowrap; }
+    #slide-01 h1, #slide-01 .lead { color:#000; }
+    [contenteditable="true"] { cursor:text; outline:0; border-radius:6px; }
+    [contenteditable="true"]:focus { outline:2px dashed rgba(91,48,36,.35); outline-offset:6px; }
+    .zoom-controls { position:fixed; z-index:20; top:18px; right:18px; display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #d9b77f; border-radius:999px; background:rgba(255,253,250,.96); box-shadow:0 4px 12px rgba(91,48,36,.16); font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif; }
+    .zoom-controls button { min-width:42px; height:36px; border:0; border-radius:999px; background:#f1dfbf; color:#5b3024; font-size:20px; cursor:pointer; }
+    .zoom-controls button:hover { background:#e7ce9d; }
+    #zoom-level { min-width:58px; text-align:center; font-size:16px; color:#5b3024; }
+    .shot { display:block; width:100%; max-height:650px; object-fit:contain; margin:28px auto 30px; border:5px solid #3e2b26; border-radius:10px; background:#fff; box-shadow:0 10px 18px rgba(91,48,36,.12); }
+    .shot.wide { max-height:520px; }
+    .tip { margin-top:24px; padding:0; border:0; border-radius:0; background:transparent; color:var(--muted); font-size:calc(35px * var(--font-scale, 1)); line-height:1.45; font-weight:400; text-align:center; }
+    .steps { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:45px; text-align:left; }
+    .step { padding:25px; border:2px solid #ebd4ab; border-radius:22px; background:#fffaf0; font-size:calc(35px * var(--font-scale, 1)); line-height:1.35; font-weight:700; }
+    .step b { color:var(--green); }
+    .handle { position:absolute; z-index:1; bottom:38px; width:100%; text-align:center; font-size:29px; color:#764637; }
+    .footer-note { position:absolute; z-index:1; bottom:85px; left:120px; right:120px; text-align:center; font-size:25px; color:#805f50; }
+    /* Use the supplied 米克師 base images as fixed backgrounds. */
+    .slide { background:center/cover no-repeat; }
+    .slide::after { display:none; }
+    #slide-01 { background-image:url("assets/templates/cover.png"); }
+    #slide-02, #slide-03, #slide-04, #slide-05, #slide-06, #slide-07, #slide-08, #slide-09, #slide-10, #slide-11 { background-image:url("assets/templates/body.png"); }
+    #slide-12 { background-image:url("assets/templates/penultimate.png"); }
+    #slide-13 { background-image:url("assets/templates/final.png"); }
+    .paper { background:transparent; box-shadow:none; }
+    .tape, .handle { display:none; }
+    .base-bg { position:absolute; inset:0; z-index:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .slide > .paper, .slide > .number { z-index:1; }
+    #slide-01 .paper { inset:275px 150px 200px; padding:110px 65px 50px; }
+    #slide-02 .paper, #slide-03 .paper, #slide-04 .paper, #slide-05 .paper, #slide-06 .paper, #slide-07 .paper, #slide-08 .paper, #slide-09 .paper, #slide-10 .paper, #slide-11 .paper { inset:90px 65px 125px; padding:55px 65px; }
+    #slide-02 .paper, #slide-03 .paper, #slide-04 .paper, #slide-05 .paper, #slide-06 .paper, #slide-07 .paper, #slide-08 .paper, #slide-09 .paper, #slide-10 .paper, #slide-11 .paper { display:flex; flex-direction:column; justify-content:center; }
+    #slide-12 .paper { inset:910px 90px 135px; padding:35px 40px; }
+    #slide-13 .paper { inset:375px 100px 300px; padding:55px 50px; }
+    /* Keep the six-output cards clear of the lower coffee-brown arc. */
+    #slide-08 .shot { max-height:340px; margin:16px auto 10px; }
+    #slide-08 .steps { margin-top:14px; gap:16px; }
+    #slide-08 .step { padding:18px 22px; font-size:calc(35px * var(--font-scale, 1)); }
+    @media print {
+      @page { size: 1080px 1350px; margin: 0; }
+      html, body { width:1080px; margin:0; background:#fff; }
+      .slide { break-after:page; page-break-after:always; }
+      .slide:last-of-type { break-after:auto; page-break-after:auto; }
+      [contenteditable="true"]:focus { outline:0; }
+      .zoom-controls { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="zoom-controls" aria-label="頁面縮放控制" contenteditable="false">
+    <button type="button" id="zoom-out" aria-label="縮小">−</button>
+    <span id="zoom-level">100%</span>
+    <button type="button" id="zoom-in" aria-label="放大">＋</button>
+    <button type="button" id="zoom-reset" aria-label="重設大小">重設</button>
+  </nav>
+  <section class="slide" id="slide-01"><div class="paper"><div class="tape"></div><p class="emoji">🧾</p><p class="eyebrow">老師也能自己做</p><h1>AI 考卷產生器<br>操作教學</h1><div class="divider"></div><p class="lead">貼上教材，跟著選 4 個設定，<br>一次完成紙本、點讀與講解簡報。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-02"><span class="number">STEP 1</span><div class="paper"><div class="tape"></div><p class="emoji">🔗</p><h2>先安裝出題 Skill</h2><p>在 AI 助理的對話框輸入：</p><img class="shot" src="assets/01-install.png" alt="安裝 exam_generator Skill"><div class="tip">輸入：「幫我安裝這個 Skill：<br>https://github.com/chuoneone/exam_generator」</div><p class="lead">安裝完成後，就能直接開始出題。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-03"><span class="number">STEP 2</span><div class="paper"><div class="tape"></div><p class="emoji">📚</p><h2>貼上教材或主題</h2><p>告訴 AI 科目、範圍與題數；<br>也可以直接貼上課文內容。</p><img class="shot wide" src="assets/02-prompt.png" alt="貼上出題內容"><div class="tip">範例：根據以下內容幫我出題：<br>〈視力與偏見〉，共 20 題。</div><p class="lead">教材越聚焦，題目越貼近教學目標。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-04"><span class="number">STEP 3-1</span><div class="paper"><div class="tape"></div><p class="emoji">📝</p><h2>選擇要出的題型</h2><p>依學生需要，勾選一種或多種題型。</p><img class="shot" src="assets/03-question-type.png" alt="選擇題型"><div class="tip">可選：國字注音、字詞注釋、句子挖空、<br>文章理解、素養題與簡答題。</div></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-05"><span class="number">STEP 3-2</span><div class="paper"><div class="tape"></div><p class="emoji">🔢</p><h2>決定題數與配分</h2><p>從建議的 10 題、5 題、15 題或 20 題，<br>選一個最符合這次練習的版本。</p><img class="shot" src="assets/04-question-count.png" alt="選擇題數與配分"><p class="lead">不用自己重算配分，<br>AI 會依選擇安排試卷結構。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-06"><span class="number">STEP 3-3</span><div class="paper"><div class="tape"></div><p class="emoji">🔠</p><h2>選擇字體大小</h2><p>依閱讀需求選 12pt 到 20pt，<br>需要大字版也能直接選。</p><img class="shot" src="assets/05-font-size.png" alt="選擇考卷字體大小"><div class="tip">特教學生常需要放大字體；<br>這一步先選好，後面就不用重排。</div></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-07"><span class="number">STEP 3-4</span><div class="paper"><div class="tape"></div><p class="emoji">💡</p><h2>要不要教師解析？</h2><p>最後決定是否同步產生<br>答案與每一題的詳細解析。</p><img class="shot" src="assets/06-answer-explanation.png" alt="選擇是否需要答案與詳細解析"><p class="lead">建議選「是」：備課、講解與改題<br>都會省下不少時間。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-08"><span class="number">STEP 4</span><div class="paper"><div class="tape"></div><p class="emoji">📦</p><h2>一次拿到六合一檔案</h2><p>AI 會在同一個資料夾產出六種格式。</p><img class="shot" src="assets/10-outputs.png" alt="六種輸出檔案"><div class="steps"><div class="step"><b>學生</b><br>練習卷 PDF／Word</div><div class="step"><b>學生</b><br>點讀有聲 HTML</div><div class="step"><b>教師</b><br>解析 PDF／Word</div><div class="step"><b>教師</b><br>講解簡報 HTML</div></div></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-09"><span class="number">成果 1</span><div class="paper"><div class="tape"></div><p class="emoji">🔊</p><h2>學生點讀有聲版</h2><p>支援朗讀、語速調整、字體放大，<br>讓學生能用自己的節奏練習。</p><img class="shot wide" src="assets/09-student-click-read.png" alt="學生點讀有聲 HTML"><div class="tip">適合自主練習、報讀支援，<br>也能列印成紙本考卷。</div></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-10"><span class="number">成果 2</span><div class="paper"><div class="tape"></div><p class="emoji">🧑‍🏫</p><h2>教師講解簡報版</h2><p>全螢幕投影片、整題朗讀與手寫白板，<br>答案預設不直接顯示。</p><img class="shot wide" src="assets/08-teacher-presentation.png" alt="教師講解簡報 HTML"><p class="lead">不用再把考卷另外做成投影片，<br>課堂講解直接開檔就能用。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-11"><span class="number">成果 3</span><div class="paper"><div class="tape"></div><p class="emoji">🖨️</p><h2>紙本考卷也準備好了</h2><p>學生練習卷 PDF／Word，<br>需要手動調整格式時也很方便。</p><img class="shot wide" src="assets/11-paper-pdf.png" alt="學生用紙本練習卷 PDF"><div class="divider"></div><p class="lead">AI 幫你先完成第一版，<br>最後仍請依學生需求檢查與調整。</p></div><footer class="handle">@spedmix2025</footer></section>
+
+  <section class="slide" id="slide-12"><div class="paper"><p>Google 搜尋「米克師」<br>進入【教材與評量】<br>找到【AI 數位與紙本考卷產生器】</p></div></section>
+
+  <section class="slide" id="slide-13"><div class="paper"><p class="emoji">📌</p><h2>收藏這篇，<br>下次備課直接試試看</h2><div class="divider"></div><p>安裝指令：<br>幫我安裝這個 Skill：<br>https://github.com/chuoneone/exam_generator</p></div></section>
+  <script>
+    var activeTextNode = null;
+    var zoom = 1;
+    function applyZoom() {
+      if (activeTextNode) activeTextNode.style.setProperty('--font-scale', zoom);
+      document.getElementById('zoom-level').textContent = Math.round(zoom * 100) + '%';
+    }
+    document.getElementById('zoom-out').addEventListener('click', function () { zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1)); applyZoom(); });
+    document.getElementById('zoom-in').addEventListener('click', function () { zoom = Math.min(1.5, +(zoom + 0.1).toFixed(1)); applyZoom(); });
+    document.getElementById('zoom-reset').addEventListener('click', function () { zoom = 1; applyZoom(); });
+    var cover = document.querySelector('#slide-01');
+    if (cover) {
+      var coverTitle = cover.querySelector('h1');
+      var coverSubtitle = cover.querySelector('.lead');
+      if (coverTitle) coverTitle.innerHTML = '老師備課出題<br>總是花好多時間？';
+      if (coverSubtitle) coverSubtitle.innerHTML = 'AI 數位與紙本考卷產生器<br>一次完成六種教學檔案';
+    }
+    document.querySelectorAll('.paper').forEach(function (paper) {
+      var slide = paper.closest('.slide');
+      var shortTitles = {
+        'slide-02': '安裝 Skill',
+        'slide-03': '貼上教材',
+        'slide-04': '選擇題型',
+        'slide-05': '決定題數',
+        'slide-06': '選擇字體',
+        'slide-07': '設定教師解析',
+        'slide-08': '取得六種檔案',
+        'slide-09': '學生點讀版',
+        'slide-10': '教師講解版',
+        'slide-11': '紙本考卷'
+      };
+      var title = paper.querySelector('h2');
+      if (slide && title && shortTitles[slide.id]) title.textContent = shortTitles[slide.id];
+      var icon = paper.querySelector(':scope > .emoji');
+      if (!icon) return;
+      var heading = icon.nextElementSibling;
+      if (paper.closest('#slide-01')) return;
+      if (!heading || !/^H[12]$/.test(heading.tagName)) return;
+      var row = document.createElement('div');
+      row.className = 'title-row';
+      if (heading !== icon.nextElementSibling) {
+        heading.parentNode.insertBefore(row, heading);
+      } else {
+        paper.insertBefore(row, icon);
+      }
+      row.appendChild(icon);
+      row.appendChild(heading);
+
+      var shot = paper.querySelector(':scope > .shot');
+      var intro = row.nextElementSibling;
+      if (shot && intro && intro.tagName === 'P' && !intro.classList.contains('emoji')) {
+        shot.after(intro);
+      }
+    });
+    document.querySelectorAll('.slide h1, .slide h2, .slide p:not(.emoji), .slide .tip, .slide .step, .slide .eyebrow, .slide .number').forEach(function (node) {
+      node.setAttribute('contenteditable', 'true');
+      node.setAttribute('spellcheck', 'false');
+      node.style.setProperty('--font-scale', '1');
+      node.addEventListener('click', function (event) {
+        event.stopPropagation();
+        activeTextNode = node;
+        zoom = parseFloat(getComputedStyle(node).getPropertyValue('--font-scale')) || 1;
+        document.getElementById('zoom-level').textContent = Math.round(zoom * 100) + '%';
+      });
+    });
+    document.querySelectorAll('.slide').forEach(function (slide) {
+      var source = 'assets/templates/body.png';
+      if (slide.id === 'slide-01') source = 'assets/templates/cover.png';
+      if (slide.id === 'slide-12') source = 'assets/templates/penultimate.png';
+      if (slide.id === 'slide-13') source = 'assets/templates/final.png';
+      var image = document.createElement('img');
+      image.className = 'base-bg';
+      image.alt = '';
+      image.src = source;
+      slide.insertBefore(image, slide.firstChild);
+    });
+  </script>
+</body>
+</html>

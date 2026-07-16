@@ -15,10 +15,11 @@ Create helpful, visually calm carousel posts that turn one classroom problem int
 4. Draft the complete slide-by-slide Traditional Chinese copy in a Markdown file named `<topic>-輪播逐頁文.md`. Include slide number, purpose, exact visible text, screenshot filename, background template, and notes about any link or QR code.
 5. **Stop after Stage 1.** Show the Markdown draft and ask the user to confirm or request edits. Do not create or modify the HTML until the user explicitly confirms.
 6. After confirmation, start from [carousel-template.html](assets/carousel-template.html) and use the supplied base images in `assets/templates/`: `cover.png` for the first page, `body.png` for operation pages, `penultimate.png` for the tool-access page, and `final.png` for the closing page.
-7. Build the confirmed slides as HTML/CSS at exactly 1080 × 1350 px. Keep all copy as real HTML text and place screenshots as normal `<img>` elements so browser printing preserves them even when “background graphics” is disabled.
-8. Include print settings: `@page { size: 1080px 1350px; margin: 0; }`, `break-after: page`, and a final slide without a trailing break. Use a real `<img class="base-bg">` layer for every base image; do not rely only on CSS `background-image`.
-9. Inspect the rendered or print-preview pages. Correct overflow, awkward wrapping, missing base images, incorrect Chinese characters, and spacing before delivery. Keep the editable HTML and the approved Markdown together.
-10. Keep factual claims proportionate. State limitations and teacher judgment when discussing AI or student support.
+7. Use [AI考卷產生器_操作教學.html](assets/examples/AI考卷產生器_操作教學/AI考卷產生器_操作教學.html) as the reference exemplar for the complete editable, print-ready carousel implementation and its local screenshot/base-image paths.
+8. Build the confirmed slides as HTML/CSS at exactly 1080 × 1350 px. Keep all copy as real HTML text and place screenshots as normal `<img>` elements so browser printing preserves them even when “background graphics” is disabled.
+9. Include print settings: `@page { size: 1080px 1350px; margin: 0; }`, `break-after: page`, and a final slide without a trailing break. Use a real `<img class="base-bg">` layer for every base image; do not rely only on CSS `background-image`.
+10. Inspect the rendered or print-preview pages. Correct overflow, awkward wrapping, missing base images, incorrect Chinese characters, and spacing before delivery. Keep the editable HTML and the approved Markdown together.
+11. Keep factual claims proportionate. State limitations and teacher judgment when discussing AI or student support.
 
 ## Output Rules
 
