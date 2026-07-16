@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "米克師 IG 圖文"
+  short_description: "依米克師風格製作繁中 Instagram 輪播圖文。"
+  default_prompt: "Use $mikesh-instagram-posts to draft a Markdown carousel plan from my screenshots first, wait for my approval, then build the confirmed HTML slides."
