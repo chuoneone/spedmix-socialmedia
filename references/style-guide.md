@@ -5,6 +5,7 @@
 - Format: portrait Instagram carousel, 4:5.
 - Background: warm cream or off-white with subtle paper texture. Leave generous space.
 - Main text: dark coffee brown, bold, clean Traditional Chinese sans serif. Preserve the current headline font family and weight.
+- Cover exception: the first-slide headline and subtitle are black for stronger contrast; do not apply this color change to later slides.
 - Supporting text: use the Iansui (芫荽體) family for explanatory/body copy, with a Traditional Chinese fallback stack. Keep it dark brown or nearly black.
 - Structure: a central white, rounded paper card may be held by a beige tape strip. Use thin brown arcs or dashed dividers sparingly.
 - Cues: one large Emoji near the title is enough. Use it to signal the slide function: problem, check, tools, takeaway, link, or search.
