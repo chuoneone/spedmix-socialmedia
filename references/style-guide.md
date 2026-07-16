@@ -9,6 +9,7 @@
 - Cover copy: headline = a recognizable teacher pain point or question; subtitle = the tool name or teaching theme.
 - Cover line layout: use exactly two lines for the headline and exactly two lines for the subtitle, with explicit `<br>` breaks.
 - Inner body copy: all explanatory text, tips, leads, and cards use Iansui (芫荽體) at 35px consistently; do not vary body sizes between slides.
+- Keep explanatory text, examples, and tips as plain text without colored backgrounds, borders, or rounded boxes.
 - Supporting text: use the Iansui (芫荽體) family for explanatory/body copy, with a Traditional Chinese fallback stack. Keep it dark brown or nearly black.
 - Structure: a central white, rounded paper card may be held by a beige tape strip. Use thin brown arcs or dashed dividers sparingly.
 - Cues: one large Emoji near the title is enough. Use it to signal the slide function: problem, check, tools, takeaway, link, or search.

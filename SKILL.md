@@ -50,6 +50,7 @@ Create helpful, visually calm carousel posts that turn one classroom problem int
 - Cover copy convention: make the main headline a concrete teacher pain point; use the subtitle to name the tool, resource, or post theme.
 - Cover line layout: always compose the main headline as exactly two lines and the subtitle as exactly two lines; use a deliberate line break rather than relying on automatic wrapping.
 - Inner body copy typography: use the Iansui (芫荽體) family at a consistent 35px size for explanatory text, tips, leads, and output cards. Titles use their separate headline size.
+- Body copy presentation: render explanations, examples, and tips as plain text on the base image; do not put them inside colored boxes or rounded callout containers.
 - Check contrast, mobile legibility, safe margins, and that the title fits on one intended line group without awkward wrapping.
 - Stage 1 must deliver the editable Markdown draft only; Stage 2 must deliver the approved Markdown, editable HTML source, and any exported slide images/PDF.
 - Verify that examples involving disability, attention, behavior, or mistakes are respectful and strengths-based.
