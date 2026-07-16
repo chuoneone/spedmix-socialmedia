@@ -7,6 +7,7 @@
 - Main text: dark coffee brown, bold, clean Traditional Chinese sans serif. Preserve the current headline font family and weight.
 - Cover exception: the first-slide headline and subtitle are black for stronger contrast; do not apply this color change to later slides.
 - Cover copy: headline = a recognizable teacher pain point or question; subtitle = the tool name or teaching theme.
+- Cover line layout: use exactly two lines for the headline and exactly two lines for the subtitle, with explicit `<br>` breaks.
 - Inner body copy: all explanatory text, tips, leads, and cards use Iansui (芫荽體) at 35px consistently; do not vary body sizes between slides.
 - Supporting text: use the Iansui (芫荽體) family for explanatory/body copy, with a Traditional Chinese fallback stack. Keep it dark brown or nearly black.
 - Structure: a central white, rounded paper card may be held by a beige tape strip. Use thin brown arcs or dashed dividers sparingly.
