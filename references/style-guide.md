@@ -6,10 +6,11 @@
 - Background: warm cream or off-white with subtle paper texture. Leave generous space.
 - Main text: dark coffee brown, bold, clean Traditional Chinese sans serif. Preserve the current headline font family and weight.
 - Cover exception: the first-slide headline and subtitle are black for stronger contrast; do not apply this color change to later slides.
+- Cover copy: headline = a recognizable teacher pain point or question; subtitle = the tool name or teaching theme.
 - Supporting text: use the Iansui (芫荽體) family for explanatory/body copy, with a Traditional Chinese fallback stack. Keep it dark brown or nearly black.
 - Structure: a central white, rounded paper card may be held by a beige tape strip. Use thin brown arcs or dashed dividers sparingly.
 - Cues: one large Emoji near the title is enough. Use it to signal the slide function: problem, check, tools, takeaway, link, or search.
-- Title cue layout: keep the icon and title in one horizontal row, with the icon immediately to the title's left. Do not give the icon its own line.
+- Title cue layout: keep the icon on its own line above the title. Do not place it beside the title.
 - Brand mark: place `@spedmix2025` small and centered at the bottom.
 - Visuals: favor one clear screenshot, UI mockup, teaching artifact, or warm child-friendly illustration. Use images to explain, not decorate.
 
@@ -19,6 +20,7 @@
 - Use a self-contained HTML file with inline CSS or a colocated stylesheet. Avoid external font, icon, or image URLs unless the user supplies them.
 - Use CSS for the cream background, subtle texture, paper cards, tape, arcs, dividers, arrows, buttons, and layout. Keep text as real HTML text.
 - Use the existing headline stack for titles. For body copy use `"Iansui", "芫荽體", "芫荽", "Noto Sans TC", "Microsoft JhengHei", sans-serif` so explanatory text is consistently rendered in 芫荽體 when installed.
+- Inner-slide order: title first, screenshot second, explanatory body copy below the screenshot. Avoid a subtitle directly beneath an inner-slide title.
 - Export a PNG only after browser-rendering the final HTML at 1080 × 1350 px. Keep the HTML source as the editable master.
 - Use the bundled base images: `assets/templates/cover.png`, `body.png`, `penultimate.png`, and `final.png`. Add them as real `<img class="base-bg">` layers so they survive browser print preview without requiring “background graphics”.
 - In the HTML print stylesheet, set `@page { size: 1080px 1350px; margin: 0; }`, apply `break-after: page` to each slide, and remove the break from the final slide.
