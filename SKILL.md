@@ -43,6 +43,8 @@ Create helpful, visually calm carousel posts that turn one classroom problem int
 
 - Confirm every Chinese character, punctuation mark, button label, and handle is correct.
 - Keep one headline font family and weight throughout each slide; use a smaller regular weight only for body copy.
+- Keep the existing headline font treatment unchanged. Render explanatory/body copy with the Iansui (芫荽體) family when available, using the documented Traditional Chinese fallback stack.
+- Place each title icon to the left of its title in the same horizontal title row; never place the icon on a separate line above the title.
 - Check contrast, mobile legibility, safe margins, and that the title fits on one intended line group without awkward wrapping.
 - Stage 1 must deliver the editable Markdown draft only; Stage 2 must deliver the approved Markdown, editable HTML source, and any exported slide images/PDF.
 - Verify that examples involving disability, attention, behavior, or mistakes are respectful and strengths-based.
