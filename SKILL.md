@@ -51,7 +51,7 @@ Create helpful, visually calm carousel posts that turn one classroom problem int
 - Cover line layout: always compose the main headline as exactly two lines and the subtitle as exactly two lines; use a deliberate line break rather than relying on automatic wrapping.
 - Cover copy density: write a complete, conversational pain-point sentence and a useful tool/theme description; avoid short labels that leave the cover visually empty.
 - HTML editing: mark visible copy as `contenteditable="true"` so the teacher can click and revise titles, body text, tips, and output cards directly in the browser. Keep edit outlines screen-only and hide them when printing.
-- Include browser controls for per-slide text scaling (縮小／100%／放大／重設). The user selects a slide by clicking it, and only that slide's title/body sizes change; keep other slides and the fixed print canvas unchanged.
+- Include browser controls for per-text-block scaling (縮小／100%／放大／重設). The user clicks a specific editable text block, and only that block's font size changes; keep other blocks and the fixed print canvas unchanged.
 - Inner body copy typography: use the Iansui (芫荽體) family at a consistent 35px size for explanatory text, tips, leads, and output cards. Titles use their separate headline size.
 - Body copy presentation: render explanations, examples, and tips as plain text on the base image; do not put them inside colored boxes or rounded callout containers.
 - Check contrast, mobile legibility, safe margins, and that the title fits on one intended line group without awkward wrapping.
