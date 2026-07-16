@@ -9,6 +9,7 @@
 - Cover copy: headline = a recognizable teacher pain point or question; subtitle = the tool name or teaching theme.
 - Cover line layout: use exactly two lines for the headline and exactly two lines for the subtitle, with explicit `<br>` breaks.
 - Keep enough copy on the cover to match the established style: a full pain-point sentence plus a descriptive tool/theme benefit, not a one- or two-word label.
+- Make visible copy directly editable in the browser with `contenteditable="true"`; use a subtle focus outline for editing and remove it in print CSS.
 - Inner body copy: all explanatory text, tips, leads, and cards use Iansui (芫荽體) at 35px consistently; do not vary body sizes between slides.
 - Keep explanatory text, examples, and tips as plain text without colored backgrounds, borders, or rounded boxes.
 - Supporting text: use the Iansui (芫荽體) family for explanatory/body copy, with a Traditional Chinese fallback stack. Keep it dark brown or nearly black.
