@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 類化任務卡生成助手｜IG 輪播圖</title>
+  <style>
+    :root {
+      --cream: #fbf4e7;
+      --paper: #fffdfa;
+      --coffee: #5b3024;
+      --muted: #725348;
+      --line: #d9b77f;
+      --green: #4f8e72;
+      --font-scale: 1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #d9d2c8;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    
+    /* Carousel fixed canvas */
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      background: var(--cream);
+      color: var(--coffee);
+    }
+    
+    /* Base background layer */
+    .base-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    
+    /* Slide number label */
+    .number {
+      position: absolute;
+      z-index: 1;
+      top: 42px;
+      left: 56px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: #f1dfbf;
+      color: #7b4f30;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    /* Paper card text container overlays */
+    .paper {
+      position: absolute;
+      z-index: 1;
+      background: transparent;
+      box-shadow: none;
+      text-align: center;
+    }
+    
+    .tape, .handle {
+      display: none;
+    }
+    
+    /* Layouts for specific slides based on template background insets */
+    #slide-01 .paper {
+      inset: 275px 150px 200px;
+      padding: 110px 65px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    #slide-02 .paper, 
+    #slide-03 .paper, 
+    #slide-04 .paper, 
+    #slide-05 .paper,
+    #slide-06 .paper {
+      inset: 90px 65px 125px;
+      padding: 55px 65px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    #slide-07 .paper {
+      inset: 910px 90px 135px;
+      padding: 35px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    #slide-08 .paper {
+      inset: 375px 100px 300px;
+      padding: 55px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    /* Typography Style Guide */
+    h1, h2 {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--coffee);
+      margin: 0;
+    }
+    
+    h1 {
+      font-size: calc(72px * var(--font-scale, 1));
+      line-height: 1.28;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    
+    h2 {
+      font-size: calc(76px * var(--font-scale, 1));
+      line-height: 1.2;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+    
+    p, .tip, .step {
+      font-family: "Iansui", "芫荽體", "芫荽", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: calc(35px * var(--font-scale, 1));
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0;
+    }
+    
+    .lead {
+      margin-top: 38px;
+      font-size: calc(35px * var(--font-scale, 1));
+      color: var(--coffee);
+      font-weight: 700;
+    }
+    
+    .divider {
+      width: 72%;
+      margin: 38px auto;
+      border-top: 4px dashed var(--line);
+    }
+    
+    .emoji {
+      margin: 0 0 26px;
+      font-size: 74px;
+      line-height: 1;
+    }
+    
+    /* Cover colors override (Headline and Subtitle in Black) */
+    #slide-01 h1, #slide-01 .lead {
+      color: #000;
+    }
+    
+    /* Screenshot positioning */
+    .shot {
+      display: block;
+      width: 100%;
+      max-height: 650px;
+      object-fit: contain;
+      margin: 28px auto 30px;
+      border: 5px solid #3e2b26;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 10px 18px rgba(91, 48, 36, 0.12);
+    }
+    
+    .shot.wide {
+      max-height: 520px;
+    }
+    
+    /* Grid for side-by-side screenshots */
+    .shot-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      margin: 28px auto 30px;
+      width: 100%;
+    }
+    
+    .shot-group .shot {
+      margin: 0;
+      max-height: 480px;
+      max-width: 48%;
+    }
+    
+    /* Callout tip at the bottom */
+    .tip {
+      margin-top: 24px;
+      color: var(--muted);
+      font-weight: 400;
+      text-align: center;
+    }
+    
+    /* Two-column layout for final page */
+    .final-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      text-align: left;
+      width: 100%;
+    }
+    
+    .final-left {
+      flex: 1;
+    }
+    
+    .final-left p {
+      font-size: calc(34px * var(--font-scale, 1));
+      line-height: 1.6;
+      color: var(--coffee);
+    }
+    
+    .final-left p strong {
+      color: var(--green);
+    }
+    
+    .final-right {
+      flex: 0 0 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .qr-image {
+      width: 320px;
+      height: 320px;
+      border: 6px solid #3e2b26;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(91, 48, 36, 0.12);
+    }
+    
+    /* Interactive editing controls */
+    [contenteditable="true"] {
+      cursor: text;
+      outline: 0;
+      border-radius: 6px;
+    }
+    
+    [contenteditable="true"]:focus {
+      outline: 2px dashed rgba(91, 48, 36, 0.35);
+      outline-offset: 6px;
+    }
+    
+    .zoom-controls {
+      position: fixed;
+      z-index: 20;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid #d9b77f;
+      border-radius: 999px;
+      background: rgba(255, 253, 250, 0.96);
+      box-shadow: 0 4px 12px rgba(91, 48, 36, 0.16);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    
+    .zoom-controls button {
+      min-width: 42px;
+      height: 36px;
+      border: 0;
+      border-radius: 999px;
+      background: #f1dfbf;
+      color: #5b3024;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .zoom-controls button:hover {
+      background: #e7ce9d;
+    }
+    
+    #zoom-level {
+      min-width: 58px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #5b3024;
+    }
+    
+    /* Print styles */
+    @media print {
+      @page {
+        size: 1080px 1350px;
+        margin: 0;
+      }
+      html, body {
+        width: 1080px;
+        margin: 0;
+        background: #fff;
+      }
+      .slide {
+        break-after: page;
+        page-break-after: always;
+      }
+      .slide:last-of-type {
+        break-after: auto;
+        page-break-after: auto;
+      }
+      [contenteditable="true"]:focus {
+        outline: 0;
+      }
+      .zoom-controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Zoom controls bar for quick preview editing -->
+  <nav class="zoom-controls" aria-label="頁面縮放控制" contenteditable="false">
+    <button type="button" id="zoom-out" aria-label="縮小">−</button>
+    <span id="zoom-level">100%</span>
+    <button type="button" id="zoom-in" aria-label="放大">＋</button>
+    <button type="button" id="zoom-reset" aria-label="重設大小">重設</button>
+  </nav>
+
+  <!-- Slide 1: Cover -->
+  <section class="slide" id="slide-01">
+    <div class="paper">
+      <p class="emoji">🏫</p>
+      <h1>學生在課堂學會了，<br>一回家卻不會用？</h1>
+      <div class="divider"></div>
+      <p class="lead">AI 類化任務卡生成助手<br>一鍵生成任務卡與親師指引</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 2: Situation -->
+  <section class="slide" id="slide-02">
+    <div class="paper">
+      <p class="emoji">🧠</p>
+      <h2>為什麼孩子會「無法類化」？</h2>
+      <div class="divider"></div>
+      <p>特殊需求學生的認知彈性較小，對於情境的轉換、引導語的微調非常敏感。</p>
+      <p style="margin-top: 24px;">在教室能做到的事，換到家庭、社區，少了熟悉的提示，孩子就卡住了。</p>
+      <p class="lead" style="margin-top: 38px;">這不是孩子故意不配合，而是他們需要一條「連結不同情境的橋樑」。</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 3: Step 1 (Design Move 1) -->
+  <section class="slide" id="slide-03">
+    <span class="number">步驟 1</span>
+    <div class="paper">
+      <p class="emoji">⚙️</p>
+      <h2>設定場景與特質</h2>
+      <img class="shot" src="assets/螢幕擷取畫面 2026-07-17 201341.png" alt="設定場景與學生特質介面">
+      <p>選擇練習場景（居家或校園）與年級層，再輸入 IEP 核心目標。還能補充「學生特質與喜好」（如：喜歡超人角色）。</p>
+      <p class="tip">💡 補充學生的個人特質，能讓產出的任務引導語更貼近孩子的內心！</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 4: Step 2 (Design Move 2) -->
+  <section class="slide" id="slide-04">
+    <span class="number">步驟 2</span>
+    <div class="paper">
+      <p class="emoji">📋</p>
+      <h2>結構化任務步驟卡</h2>
+      <img class="shot wide" src="assets/螢幕擷取畫面 2026-07-17 201439.png" alt="結構化任務步驟卡">
+      <p>AI 自動將複雜的 IEP 目標拆解成 3 個清晰的視覺化步驟（靜觀、嘗試、確認），並融入孩子喜愛的超人情境！</p>
+      <p class="tip">💡 結合孩子的興趣，能把「情緒調節」變成一場好玩的秘密任務！</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 5: Step 3 (Design Move 3) -->
+  <section class="slide" id="slide-05">
+    <span class="number">步驟 3</span>
+    <div class="paper">
+      <p class="emoji">🤝</p>
+      <h2>親師合作類化練習單</h2>
+      <div class="shot-group">
+        <img class="shot" src="assets/螢幕擷取畫面 2026-07-17 201427.png" alt="給導師的類化指引">
+        <img class="shot" src="assets/螢幕擷取畫面 2026-07-17 201431.png" alt="任務檢核表">
+      </div>
+      <p>生成給老師與家長的「類化指引」（含今日小進步、3分鐘小練習與鼓勵話術）與「任務檢核表」，讓親師用相同語言陪伴孩子。</p>
+      <p class="tip">💡 「鼓勵收納盒」提供具體話術，讓家長不再苦惱該怎麼開口稱讚！</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 6: Step 4 (Takeaway) -->
+  <section class="slide" id="slide-06">
+    <span class="number">步驟 4</span>
+    <div class="paper">
+      <p class="emoji">📄</p>
+      <h2>一鍵匯出 Word 學習單</h2>
+      <img class="shot wide" src="assets/螢幕擷取畫面 2026-07-17 201457.png" alt="雙面 Word 學習單成品">
+      <p>直接匯出排版精美的 Word 檔！左邊是結構化任務卡，右邊是親師合作練習單，雙面列印成一張，發給家長超方便！</p>
+      <p class="tip">💡 讓備課與溝通省時省力，把寶貴的時間留給孩子的直接引導。</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 7: Tool Access (penultimate page) -->
+  <section class="slide" id="slide-07">
+    <div class="paper">
+      <p>Google 搜尋「米克師」<br>進入【教材與評量】<br>找到【AI 類化任務卡生成助手】</p>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <!-- Slide 8: CTA (final page) -->
+  <section class="slide" id="slide-08">
+    <div class="paper">
+      <p class="emoji">📌</p>
+      <h2>讓學習從課堂走入生活！</h2>
+      <div class="divider"></div>
+      <div class="final-container">
+        <div class="final-left">
+          <p style="font-size: 32px; line-height: 1.7; color: var(--coffee);">
+            掃描右側 QR Code，<br>
+            立刻開始使用！
+          </p>
+          <p style="font-size: 26px; margin-top: 30px; color: var(--muted);">追蹤 @spedmix2025，獲取更多特教備課與教學靈感！</p>
+        </div>
+        <div class="final-right">
+          <img class="qr-image" src="assets/qrcode_spedmix.pages.dev.png" alt="米克師 QR Code">
+        </div>
+      </div>
+    </div>
+    <footer class="handle">@spedmix2025</footer>
+  </section>
+
+  <script>
+    var activeTextNode = null;
+    var zoom = 1;
+    
+    function applyZoom() {
+      if (activeTextNode) {
+        activeTextNode.style.setProperty('--font-scale', zoom);
+      }
+      document.getElementById('zoom-level').textContent = Math.round(zoom * 100) + '%';
+    }
+    
+    document.getElementById('zoom-out').addEventListener('click', function () {
+      zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1));
+      applyZoom();
+    });
+    
+    document.getElementById('zoom-in').addEventListener('click', function () {
+      zoom = Math.min(1.5, +(zoom + 0.1).toFixed(1));
+      applyZoom();
+    });
+    
+    document.getElementById('zoom-reset').addEventListener('click', function () {
+      zoom = 1;
+      applyZoom();
+    });
+
+    // Make all text blocks editable for easy browser-based tweaking
+    document.querySelectorAll('.slide h1, .slide h2, .slide p:not(.emoji), .slide .tip, .slide .eyebrow, .slide .number, .slide .lead').forEach(function (node) {
+      node.setAttribute('contenteditable', 'true');
+      node.setAttribute('spellcheck', 'false');
+      node.style.setProperty('--font-scale', '1');
+      node.addEventListener('click', function (event) {
+        event.stopPropagation();
+        activeTextNode = node;
+        zoom = parseFloat(node.style.getPropertyValue('--font-scale')) || 1;
+        document.getElementById('zoom-level').textContent = Math.round(zoom * 100) + '%';
+      });
+    });
+
+    // Inject base templates dynamically as fixed image layers from the project's '模版/差異化' directory
+    document.querySelectorAll('.slide').forEach(function (slide) {
+      var source = '../../templates/body.png';
+      if (slide.id === 'slide-01') source = '../../templates/cover.png';
+      if (slide.id === 'slide-07') source = '../../templates/penultimate.png';
+      if (slide.id === 'slide-08') source = '../../templates/final.png';
+      
+      var image = document.createElement('img');
+      image.className = 'base-bg';
+      image.alt = '';
+      image.src = source;
+      slide.insertBefore(image, slide.firstChild);
+    });
+  </script>
+</body>
+</html>
